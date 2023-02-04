@@ -3,47 +3,36 @@ package repository;
 import model.Post;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
 // Stub
 public class PostRepository {
 
-    private static final List<Post> repository = Collections.synchronizedList(new ArrayList<>());
+    private static final ConcurrentHashMap<Long, String> repository = new ConcurrentHashMap<>();
 
     public List<Post> all() {
-        return repository;
+        List<Post> result = new ArrayList<>();
+        repository.forEach((k, v) -> result.add(new Post(k,v)));
+        return result;
     }
 
     public Optional<Post> getById(long id) {
-        return repository.stream()
-                .filter((post) -> post.getId() == id)
+        Optional<Long> keyId = repository.keySet()
+                .stream()
+                .filter((key) -> key == id)
                 .findFirst();
+        return keyId.map(aLong -> new Post(aLong, repository.get(aLong)));
     }
 
     public Post save(Post post) {
-        boolean flag = false;
-        for (Post p : repository) {
-            if (p.getId() == post.getId()) {
-                p.setContent(post.getContent());
-                flag = true;
-                break;
-            }
-        }
-        if(!flag){
-            repository.add(post);
-        }
+        repository.put(post.getId(), post.getContent());
         return post;
     }
 
     public void removeById(long id) {
-        for (int i = 0; i < repository.size(); i++) {
-            if(repository.get(i).getId() == id){
-                repository.remove(i);
-                break;
-            }
-        }
+        repository.entrySet()
+                .removeIf(entry -> entry.getKey() == id);
     }
 }
