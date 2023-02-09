@@ -1,16 +1,19 @@
 package repository;
 
+import exception.NotFoundException;
 import model.Post;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 // Stub
 public class PostRepository {
 
     private static final ConcurrentHashMap<Long, String> repository = new ConcurrentHashMap<>();
+    private final AtomicLong counterPosts = new AtomicLong();
 
     public List<Post> all() {
         List<Post> result = new ArrayList<>();
@@ -19,20 +22,30 @@ public class PostRepository {
     }
 
     public Optional<Post> getById(long id) {
-        Optional<Long> keyId = repository.keySet()
-                .stream()
-                .filter((key) -> key == id)
-                .findFirst();
-        return keyId.map(aLong -> new Post(aLong, repository.get(aLong)));
+        if (id <= counterPosts.get()){
+            Optional<Long> keyId = repository.keySet()
+                    .stream()
+                    .filter((key) -> key == id)
+                    .findFirst();
+            return keyId.map(aLong -> new Post(aLong, repository.get(aLong)));
+        } else throw new NotFoundException();
     }
 
     public Post save(Post post) {
-        repository.put(post.getId(), post.getContent());
+        if(post.getId() == 0){
+            post.setId(counterPosts.incrementAndGet());
+            repository.put(post.getId(), post.getContent());
+        } else {
+            repository.put(post.getId(), post.getContent());
+        }
         return post;
     }
 
     public void removeById(long id) {
-        repository.entrySet()
-                .removeIf(entry -> entry.getKey() == id);
+        if(id <= counterPosts.get()){
+            repository.entrySet()
+                    .removeIf(entry -> entry.getKey() == id);
+            counterPosts.decrementAndGet();
+        } else throw new NotFoundException();
     }
 }
