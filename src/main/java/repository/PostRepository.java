@@ -12,39 +12,30 @@ import java.util.concurrent.atomic.AtomicLong;
 // Stub
 public class PostRepository {
 
-    private static final ConcurrentHashMap<Long, String> repository = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, Post> repository = new ConcurrentHashMap<>();
     private final AtomicLong counterPosts = new AtomicLong();
 
     public List<Post> all() {
-        List<Post> result = new ArrayList<>();
-        repository.forEach((k, v) -> result.add(new Post(k,v)));
-        return result;
+        return new ArrayList<>(repository.values());
     }
 
     public Optional<Post> getById(long id) {
-        if (id <= counterPosts.get()){
-            Optional<Long> keyId = repository.keySet()
-                    .stream()
-                    .filter((key) -> key == id)
-                    .findFirst();
-            return keyId.map(aLong -> new Post(aLong, repository.get(aLong)));
-        } else throw new NotFoundException();
+        return Optional.ofNullable(repository.get(id));
     }
 
     public Post save(Post post) {
         if(post.getId() == 0){
-            post.setId(counterPosts.incrementAndGet());
-            repository.put(post.getId(), post.getContent());
+            post.setId(counterPosts.getAndIncrement());
+            repository.put(post.getId(), post);
         } else {
-            repository.put(post.getId(), post.getContent());
+            repository.put(post.getId(), post);
         }
         return post;
     }
 
     public void removeById(long id) {
-        if(id <= counterPosts.get()){
-            repository.entrySet()
-                    .removeIf(entry -> entry.getKey() == id);
+        if(repository.containsKey(id)){
+            repository.remove(id);
             counterPosts.decrementAndGet();
         } else throw new NotFoundException();
     }
