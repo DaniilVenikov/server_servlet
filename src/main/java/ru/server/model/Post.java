@@ -1,4 +1,4 @@
-package model;
+package ru.server.model;
 
 public class Post {
     private long id;

@@ -10,10 +10,10 @@
   <display-name>Archetype Created Web Application</display-name>
 
   <response-character-encoding>UTF-8</response-character-encoding>
-  <!-- определение servlet'а -->
+  <!-- определение basePackage.servlet'а -->
   <servlet>
     <servlet-name>main</servlet-name>
-    <servlet-class>servlet.MainServlet</servlet-class>
+    <servlet-class>ru.server.servlet.MainServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 

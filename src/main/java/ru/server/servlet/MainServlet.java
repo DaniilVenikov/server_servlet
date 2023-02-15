@@ -1,55 +1,43 @@
-package servlet;
+package ru.server.servlet;
 
-import controller.PostController;
-import repository.PostRepository;
-import service.PostService;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
-//    @Override
-//    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        resp.getWriter().println("Hello from servlet");
-//    }
 
-    private PostController controller;
+   /* private PostController basePackage.basePackage.controller;
 
     @Override
     public void init() {
-        final var repository = new PostRepository();
-        final var service = new PostService(repository);
-        controller = new PostController(service);
+        final var basePackage.repository = new PostRepository();
+        final var basePackage.service = new PostService(basePackage.repository);
+        basePackage.basePackage.controller = new PostController(basePackage.service);
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) {
+    protected void basePackage.service(HttpServletRequest req, HttpServletResponse resp) {
         // если деплоились в root context, то достаточно этого
         try {
             final var path = req.getRequestURI();
             final var method = req.getMethod();
             // primitive routing
             if (method.equals("GET") && path.equals("/api/posts")) {
-                controller.all(resp);
+                basePackage.basePackage.controller.all(resp);
                 return;
             }
             if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
                 // easy way
                 final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
-                controller.getById(id, resp);
+                basePackage.basePackage.controller.getById(id, resp);
                 return;
             }
             if (method.equals("POST") && path.equals("/api/posts")) {
-                controller.save(req.getReader(), resp);
+                basePackage.basePackage.controller.save(req.getReader(), resp);
                 return;
             }
             if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
                 // easy way
                 final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
-                controller.removeById(id, resp);
+                basePackage.basePackage.controller.removeById(id, resp);
                 return;
             }
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -57,5 +45,5 @@ public class MainServlet extends HttpServlet {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 }

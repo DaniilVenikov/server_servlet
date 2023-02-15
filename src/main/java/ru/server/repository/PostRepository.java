@@ -1,7 +1,8 @@
-package repository;
+package ru.server.repository;
 
-import exception.NotFoundException;
-import model.Post;
+import ru.server.exception.NotFoundException;
+import ru.server.model.Post;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-// Stub
+@Repository
 public class PostRepository {
 
     private static final ConcurrentHashMap<Long, Post> repository = new ConcurrentHashMap<>();
