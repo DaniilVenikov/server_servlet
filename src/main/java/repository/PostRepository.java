@@ -24,19 +24,27 @@ public class PostRepository {
     }
 
     public Post save(Post post) {
-        if(post.getId() == 0){
-            post.setId(counterPosts.getAndIncrement());
-            repository.put(post.getId(), post);
-        } else {
-            repository.put(post.getId(), post);
-        }
-        return post;
+        return Optional.of(post)
+                .filter(p -> p.getId() == 0)
+                .map(this::addNewPost)
+                .orElseGet(() -> {
+                    repository.put(post.getId(), post);
+                    return post;
+                });
     }
 
     public void removeById(long id) {
-        if(repository.containsKey(id)){
-            repository.remove(id);
-            counterPosts.decrementAndGet();
-        } else throw new NotFoundException();
+        Optional.ofNullable(repository.remove(id))
+                .map(post -> {
+                    counterPosts.decrementAndGet();
+                    return post;
+                })
+                .orElseThrow(NotFoundException::new);
+    }
+
+    private Post addNewPost(Post post){
+        post.setId(counterPosts.getAndIncrement());
+        repository.put(post.getId(), post);
+        return post;
     }
 }
