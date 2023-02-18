@@ -1,49 +1,15 @@
 package ru.server.servlet;
 
-import javax.servlet.http.HttpServlet;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.server.controller.PostController;
+import ru.server.service.PostService;
 
-public class MainServlet extends HttpServlet {
+public class MainServlet {
+    public static void main(String[] args) {
+        final var context = new AnnotationConfigApplicationContext("ru.server");
 
-   /* private PostController basePackage.basePackage.controller;
-
-    @Override
-    public void init() {
-        final var basePackage.repository = new PostRepository();
-        final var basePackage.service = new PostService(basePackage.repository);
-        basePackage.basePackage.controller = new PostController(basePackage.service);
+        final var repository = context.getBean("postRepository");
+        final var service = context.getBean(PostService.class);
+        final var controller = context.getBean(PostController.class);
     }
-
-    @Override
-    protected void basePackage.service(HttpServletRequest req, HttpServletResponse resp) {
-        // если деплоились в root context, то достаточно этого
-        try {
-            final var path = req.getRequestURI();
-            final var method = req.getMethod();
-            // primitive routing
-            if (method.equals("GET") && path.equals("/api/posts")) {
-                basePackage.basePackage.controller.all(resp);
-                return;
-            }
-            if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
-                // easy way
-                final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
-                basePackage.basePackage.controller.getById(id, resp);
-                return;
-            }
-            if (method.equals("POST") && path.equals("/api/posts")) {
-                basePackage.basePackage.controller.save(req.getReader(), resp);
-                return;
-            }
-            if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
-                // easy way
-                final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
-                basePackage.basePackage.controller.removeById(id, resp);
-                return;
-            }
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }*/
 }
